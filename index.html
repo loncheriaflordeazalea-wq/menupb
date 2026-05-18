@@ -72,13 +72,26 @@ header{background:var(--p);color:var(--w);padding:11px 14px;display:flex;align-i
 .btn-ver:hover{background:var(--s);}
 
 /* ── MODAL ── */
-#movl{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:600;display:none;align-items:flex-end;justify-content:center;}
+#movl{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:600;display:none;
+  flex-direction:column;align-items:center;justify-content:flex-end;padding-top:56px;}
 #movl.open{display:flex;}
-#modal{background:var(--w);border-radius:20px 20px 0 0;width:100%;max-width:680px;padding:15px 15px 34px;max-height:91vh;overflow-y:auto;animation:sUp .26s ease;position:relative;}
+/* X vive FUERA del scroll — siempre en el espacio reservado arriba (padding-top:56px) */
+#modal-x{
+  background:#fff;border:2px solid #ddd;cursor:pointer;color:#333;
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.2rem;
+  box-shadow:0 3px 12px rgba(0,0,0,.4);
+  margin-bottom:8px;align-self:flex-end;margin-right:16px;}
+#modal-x:hover{background:#f0f0f0;}
+/* wrap nunca supera el espacio disponible bajo la X */
+#modal-wrap{width:100%;max-width:680px;flex:1;min-height:0;display:flex;flex-direction:column;
+  border-radius:20px 20px 0 0;overflow:hidden;animation:sUp .26s ease;}
 @keyframes sUp{from{transform:translateY(55px);opacity:0}to{transform:translateY(0);opacity:1}}
+#modal{background:var(--w);padding:15px 15px 8px;overflow-y:auto;flex:1;min-height:0;}
+#modal-footer{background:var(--w);padding:8px 15px 22px;border-top:1.5px solid #f0f0f0;flex-shrink:0;}
 .m-handle{width:34px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 12px;}
-.m-close{position:absolute;top:13px;right:14px;background:none;border:none;font-size:1.25rem;cursor:pointer;color:#bbb;}
-.m-title{font-family:'Bebas Neue',cursive;font-size:1.28rem;color:var(--p);}
+.m-title{font-family:'Bebas Neue',cursive;font-size:1.28rem;color:var(--p);padding-right:36px;}
 .m-desc{font-size:.72rem;color:#aaa;margin:2px 0 10px;}
 .base-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#f8f9ff;border-radius:10px;margin-bottom:11px;}
 .base-lbl{font-weight:700;font-size:.84rem;}
@@ -131,7 +144,7 @@ header{background:var(--p);color:var(--w);padding:11px 14px;display:flex;align-i
 #dom-inp{margin-top:7px;display:none;}
 .dir-inp{width:100%;padding:7px 10px;border:1.5px solid #e0e0e0;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.81rem;margin-bottom:5px;}
 .dir-inp:focus{outline:none;border-color:var(--p);}
-.dir-link-btn{font-size:.74rem;color:var(--p);font-weight:700;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;}
+.dir-link-btn{font-size:.74rem;color:var(--p);font-weight:700;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;white-space:nowrap;}
 #envio-info{font-size:.71rem;color:#888;margin-top:4px;}
 .envio-gratis{color:#43a047;font-weight:700;}
 
@@ -164,8 +177,11 @@ header{background:var(--p);color:var(--w);padding:11px 14px;display:flex;align-i
 
 .btn-wa{width:100%;padding:12px;background:#25D366;color:var(--w);border:none;border-radius:12px;font-family:'Bebas Neue',cursive;font-size:1.07rem;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .18s;margin-bottom:6px;}
 .btn-wa:hover{background:#128C7E;}
-.btn-cuenta-sm{width:100%;padding:8px;background:transparent;color:var(--p);border:1.5px solid var(--p);border-radius:12px;font-family:'Bebas Neue',cursive;font-size:.84rem;letter-spacing:.8px;cursor:pointer;transition:all .18s;margin-bottom:6px;}
-.btn-cuenta-sm:hover{background:var(--p);color:var(--w);}
+.btn-atencion{width:100%;padding:8px 10px;background:transparent;color:var(--p);border:1.5px solid var(--p);border-radius:10px;font-family:'Bebas Neue',cursive;font-size:.82rem;letter-spacing:.8px;cursor:pointer;transition:all .18s;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:5px;}
+.btn-atencion:hover{background:var(--p);color:var(--w);}
+.aten-mot{padding:9px 12px;border:1.5px solid #ebebeb;border-radius:10px;font-size:.83rem;font-weight:700;cursor:pointer;transition:all .15s;color:#444;}
+.aten-mot:hover{border-color:var(--p);background:#f0f2ff;}
+.aten-mot.sel{border-color:var(--p);background:#e8eaf6;color:var(--p);}
 
 /* Redes en panel */
 .redes-panel{text-align:center;padding:7px 0 1px;}
@@ -228,40 +244,55 @@ header{background:var(--p);color:var(--w);padding:11px 14px;display:flex;align-i
 <div id="loading"><div class="spin"></div><p>Cargando menú…</p></div>
 <div id="menu"></div>
 
+<!-- REDES SOCIALES FIJAS -->
+<div id="redes-fijas" style="display:none;max-width:680px;margin:2px auto 10px;padding:0 11px;">
+  <div style="background:var(--w);border-radius:var(--rad);padding:14px 16px;box-shadow:0 2px 8px var(--sh);text-align:center;">
+    <p id="redes-fijas-ttl" style="font-size:.72rem;font-weight:800;color:var(--p);text-transform:uppercase;letter-spacing:.7px;margin-bottom:11px;">📲 Síguenos en redes sociales</p>
+    <div id="redes-fijas-icons" style="display:flex;justify-content:center;gap:22px;flex-wrap:wrap;align-items:center;"></div>
+  </div>
+</div>
+
 <!-- FAB -->
 <div id="cart-fab" onclick="openPanel()">🛒<div id="cbadge">0</div></div>
 
 <!-- MODAL PERSONALIZACIÓN -->
 <div id="movl" onclick="ovlM(event)">
-  <div id="modal">
-    <div class="m-handle"></div>
-    <button class="m-close" onclick="closeModal()">✕</button>
-    <div class="m-title" id="mt"></div>
-    <div class="m-desc"  id="md"></div>
-    <div class="base-row">
-      <span class="base-lbl">Precio base</span>
-      <span class="base-val" id="mb"></span>
+  <!-- X FUERA DEL MODAL — siempre visible sobre todo -->
+  <button id="modal-x" onclick="closeModal()">✕</button>
+  <div id="modal-wrap">
+    <!-- contenido con scroll -->
+    <div id="modal">
+      <div class="m-handle"></div>
+      <div class="m-title" id="mt"></div>
+      <div class="m-desc"  id="md"></div>
+      <div class="base-row">
+        <span class="base-lbl">Precio base</span>
+        <span class="base-val" id="mb"></span>
+      </div>
+      <div id="sec-ex">
+        <div class="sec-ttl">Elige relleno / extras</div>
+        <div class="extras-list" id="m-extras"></div>
+      </div>
+      <div id="sec-rm">
+        <div class="sec-ttl">Quitar ingredientes</div>
+        <div class="remov-wrap" id="m-remov"></div>
+      </div>
+      <div class="sec-ttl">Nota especial</div>
+      <textarea class="nota-inp" id="m-nota" rows="2" placeholder="Sin cebolla, extra salsa…"></textarea>
+      <div class="qty-row">
+        <button class="qb minus" onclick="mQty(-1)">−</button>
+        <span class="q-num" id="m-qty">1</span>
+        <button class="qb plus"  onclick="mQty(1)">+</button>
+      </div>
     </div>
-    <div id="sec-ex">
-      <div class="sec-ttl">Elige relleno / extras</div>
-      <div class="extras-list" id="m-extras"></div>
+    <!-- FOOTER FIJO — total y botón siempre visibles -->
+    <div id="modal-footer">
+      <div class="m-tot-row">
+        <span class="m-tot-lbl">Total</span>
+        <span class="m-tot-val" id="m-tot">$0</span>
+      </div>
+      <button class="btn-add" onclick="addFromModal()">+ Agregar al Pedido</button>
     </div>
-    <div id="sec-rm">
-      <div class="sec-ttl">Quitar ingredientes</div>
-      <div class="remov-wrap" id="m-remov"></div>
-    </div>
-    <div class="sec-ttl">Nota especial</div>
-    <textarea class="nota-inp" id="m-nota" rows="2" placeholder="Sin cebolla, extra salsa…"></textarea>
-    <div class="qty-row">
-      <button class="qb minus" onclick="mQty(-1)">−</button>
-      <span class="q-num" id="m-qty">1</span>
-      <button class="qb plus"  onclick="mQty(1)">+</button>
-    </div>
-    <div class="m-tot-row">
-      <span class="m-tot-lbl">Total</span>
-      <span class="m-tot-val" id="m-tot">$0</span>
-    </div>
-    <button class="btn-add" onclick="addFromModal()">+ Agregar al Pedido</button>
   </div>
 </div>
 
@@ -273,17 +304,26 @@ header{background:var(--p);color:var(--w);padding:11px 14px;display:flex;align-i
     <button class="pcb" onclick="closePanel()">✕</button>
   </div>
 
+  <!-- Nombre del cliente -->
+  <div style="margin-bottom:11px;">
+    <div class="ts-ttl">Tu nombre <span style="color:var(--s)">*</span></div>
+    <input class="dir-inp" id="cliente-nombre" placeholder="¿Cómo te llamamos?" type="text"
+           style="margin-top:5px;border-color:#e0e0e0;"/>
+  </div>
+
   <!-- Tipo de servicio -->
   <div id="tipo-servicio">
-    <div class="ts-ttl">¿Cómo lo quieres?</div>
+    <div class="ts-ttl">¿Cómo lo quieres? <span style="color:var(--s)">*</span></div>
     <div class="ts-opts" id="ts-opts"></div>
     <div id="mesa-inp">
       <div class="mesa-lbl">Elige tu mesa:</div>
       <div class="mesa-sel" id="mesa-sel"></div>
     </div>
     <div id="dom-inp">
-      <input class="dir-inp" id="dir-text" placeholder="Tu dirección completa…" type="text"/>
-      <button class="dir-link-btn" onclick="pedirUbicacion()">📍 Compartir mi ubicación</button>
+      <input class="dir-inp" id="dir-text" placeholder="Tu dirección (se llenará automático o escribe)" type="text" style="margin-top:6px;"/>
+      <button class="dir-link-btn" onclick="pedirUbicacionAuto()" style="margin-top:4px;">
+        📍 Compartir mi ubicación
+      </button>
       <div id="envio-info"></div>
     </div>
   </div>
@@ -301,11 +341,44 @@ header{background:var(--p);color:var(--w);padding:11px 14px;display:flex;align-i
     <svg width="19" height="19" viewBox="0 0 32 32" fill="white"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.39.63 4.63 1.74 6.57L3 29l6.57-1.72A12.93 12.93 0 0016 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm6.45 18.12c-.27.76-1.57 1.46-2.15 1.55-.55.08-1.25.12-2.01-.13-.46-.15-1.06-.35-1.82-.69-3.2-1.38-5.29-4.6-5.45-4.81-.16-.21-1.3-1.73-1.3-3.3s.82-2.34 1.11-2.66c.27-.3.59-.38.79-.38l.57.01c.18 0 .43-.07.67.51.27.64.9 2.2.98 2.36.08.16.13.35.03.56-.1.21-.16.34-.31.52-.16.18-.33.4-.47.54-.16.16-.32.33-.14.65.19.32.82 1.35 1.76 2.18 1.21 1.08 2.23 1.41 2.55 1.57.32.16.51.13.7-.08.19-.21.8-.93 1.01-1.25.21-.32.43-.27.72-.16.29.11 1.84.87 2.16 1.02.32.16.53.24.61.37.08.14.08.77-.19 1.52z"/></svg>
     Enviar Pedido por WhatsApp
   </button>
-  <button class="btn-cuenta-sm" onclick="pedirCuenta()">🧾 Solicitar cuenta / atención</button>
+  <button id="btn-atencion" class="btn-atencion" onclick="abrirModalAtencion()">🔔 Solicitud de Atención</button>
 
   <div class="redes-panel" id="redes-panel" style="display:none">
     <p>Síguenos en redes</p>
     <div class="redes-icons" id="redes-icons"></div>
+  </div>
+</div>
+
+<!-- MODAL ATENCIÓN -->
+<div id="aten-ovl" onclick="cerrarModalAtencion(event)"
+     style="position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:900;display:none;align-items:flex-end;justify-content:center;">
+  <div style="background:var(--w);border-radius:20px 20px 0 0;width:100%;max-width:680px;padding:18px 17px 34px;position:relative;animation:sUp .26s ease;">
+    <div style="width:34px;height:4px;background:#e0e0e0;border-radius:2px;margin:0 auto 14px;"></div>
+    <button onclick="cerrarModalAtencion(null,true)"
+            style="position:absolute;top:13px;right:14px;background:none;border:none;font-size:1.25rem;cursor:pointer;color:#bbb;">✕</button>
+    <div style="font-family:'Bebas Neue',cursive;font-size:1.25rem;color:var(--p);margin-bottom:3px;">🔔 Solicitud de Atención</div>
+    <div style="font-size:.73rem;color:#aaa;margin-bottom:13px;">Tu mensaje llegará al encargado por WhatsApp</div>
+
+    <div class="sec-ttl">Tu nombre</div>
+    <input class="dir-inp" id="aten-nombre" placeholder="¿Cómo te llamamos?" type="text" style="margin-bottom:11px;"/>
+
+    <div class="sec-ttl">Motivo de la atención</div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;" id="aten-motivos">
+      <div class="aten-mot" data-val="Necesito hacer un pedido">📋 Necesito hacer un pedido</div>
+      <div class="aten-mot" data-val="Tengo una pregunta sobre el menú">❓ Tengo una pregunta sobre el menú</div>
+      <div class="aten-mot" data-val="Solicito la cuenta">🧾 Solicitar la cuenta</div>
+      <div class="aten-mot" data-val="Tengo un problema con mi pedido">⚠️ Tengo un problema con mi pedido</div>
+      <div class="aten-mot" data-val="Quiero dejar una sugerencia">💡 Quiero dejar una sugerencia</div>
+      <div class="aten-mot" data-val="Otro motivo">💬 Otro motivo</div>
+    </div>
+
+    <div class="sec-ttl">Comentario adicional (opcional)</div>
+    <textarea class="nota-inp" id="aten-nota" rows="2" placeholder="Detalla tu solicitud…" style="margin-bottom:14px;"></textarea>
+
+    <button class="btn-wa" onclick="enviarAtencion()" style="font-size:1rem;">
+      <svg width="17" height="17" viewBox="0 0 32 32" fill="white"><path d="M16 3C8.82 3 3 8.82 3 16c0 2.39.63 4.63 1.74 6.57L3 29l6.57-1.72A12.93 12.93 0 0016 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm6.45 18.12c-.27.76-1.57 1.46-2.15 1.55-.55.08-1.25.12-2.01-.13-.46-.15-1.06-.35-1.82-.69-3.2-1.38-5.29-4.6-5.45-4.81-.16-.21-1.3-1.73-1.3-3.3s.82-2.34 1.11-2.66c.27-.3.59-.38.79-.38l.57.01c.18 0 .43-.07.67.51.27.64.9 2.2.98 2.36.08.16.13.35.03.56-.1.21-.16.34-.31.52-.16.18-.33.4-.47.54-.16.16-.32.33-.14.65.19.32.82 1.35 1.76 2.18 1.21 1.08 2.23 1.41 2.55 1.57.32.16.51.13.7-.08.19-.21.8-.93 1.01-1.25.21-.32.43-.27.72-.16.29.11 1.84.87 2.16 1.02.32.16.53.24.61.37.08.14.08.77-.19 1.52z"/></svg>
+      Enviar al Encargado
+    </button>
   </div>
 </div>
 
@@ -321,7 +394,7 @@ header{background:var(--p);color:var(--w);padding:11px 14px;display:flex;align-i
 //  CONFIGURACIÓN — solo cambia estas dos líneas entre sucursales
 // ─────────────────────────────────────────────────────────────────
 const API_URL  = "https://script.google.com/macros/s/AKfycbxrPQgFJJbnDLKAGDLZUmNIC3W6-jniImIrbL8x3iBkM0IodIdC44KdKfrruAaQccrlkQ/exec";
-const HOJA     = "LFDA_MATRIZ"; // nombre exacto de la pestaña en el GS
+const HOJA     = "PATRICK_BURGER"; // nombre exacto de la pestaña en el GS
 // ─────────────────────────────────────────────────────────────────
 
 let cfg={}, orden=[], tipoServicio="", mesaSel="";
@@ -338,6 +411,7 @@ async function cargar(){
     renderHistoria();
     renderMenu(d.categorias || {});
     renderTipoServicio();
+    renderRedesFijas();
   }catch(e){
     document.getElementById("loading").innerHTML=
       '<p style="color:var(--s);font-weight:700">Error al cargar. Recarga la página.</p>';
@@ -354,7 +428,13 @@ function aplicarCfg(){
   // Logo desde GS
   if(cfg.logo_url && !cfg.logo_url.includes("PON_TU")){
     const img = document.getElementById("logo-img");
-    img.src = cfg.logo_url;
+    // Convertir URL de Drive a formato thumbnail (evita bloqueo CORS)
+    let logoSrc = cfg.logo_url;
+    const matchDrive = cfg.logo_url.match(/id=([a-zA-Z0-9_-]+)/);
+    if(matchDrive) {
+      logoSrc = `https://drive.google.com/thumbnail?id=${matchDrive[1]}&sz=w200`;
+    }
+    img.src = logoSrc;
     img.style.display = "block";
     document.getElementById("logo-fallback").style.display = "none";
     img.onerror = () => {
@@ -370,14 +450,18 @@ function aplicarCfg(){
   document.title = cfg.header_titulo || "Menú Digital";
 
   // Banner
-  if(cfg.banner_activo==="SI" && cfg.banner_texto){
+  if(esSI(cfg.banner_activo) && cfg.banner_texto){
     const b = document.getElementById("banner");
     b.innerHTML = cfg.banner_texto;
     b.style.display = "block";
   }
 
+  // Botón solicitud de atención
+  const btnAten = document.getElementById("btn-atencion");
+  if(btnAten) btnAten.style.display = esSI(cfg.atencion_activo ?? "SI") ? "flex" : "none";
+
   // Historia
-  if(cfg.historia_activo==="SI" && cfg.historia_texto){
+  if(esSI(cfg.historia_activo) && cfg.historia_texto){
     st("hist-emoji", cfg.historia_emoji  || "📖");
     st("hist-ttl",   cfg.historia_titulo || "Nuestra Historia");
     st("hist-txt",   cfg.historia_texto  || "");
@@ -387,7 +471,7 @@ function aplicarCfg(){
 
 // ── PROMOS ────────────────────────────────────────────────────────
 function renderPromos(promos){
-  if(!promos.length || cfg.promos_activo!=="SI") return;
+  if(!promos.length || !esSI(cfg.promos_activo)) return;
   st("promos-ttl", cfg.promos_titulo || "🔥 Promociones");
   document.getElementById("promos-lista").innerHTML = promos.map(p=>`
     <div class="promo-card">
@@ -433,12 +517,15 @@ function renderMenu(cats){
 function togCat(h){ h.classList.toggle("open"); h.nextElementSibling.classList.toggle("open"); }
 
 // ── TIPO DE SERVICIO ──────────────────────────────────────────────
+// Helper: acepta SI/Si/si/sí
+function esSI(val){ return String(val||"").trim().toUpperCase()==="SI"; }
+
 function renderTipoServicio(){
   const opts = document.getElementById("ts-opts"); opts.innerHTML="";
   const srvs = [];
-  if(cfg.mesa_activo==="SI")        srvs.push({id:"mesa",    lbl:"🪑 Comer aquí"});
-  if(cfg.para_llevar_activo==="SI") srvs.push({id:"llevar",  lbl:"🥡 Para llevar"});
-  if(cfg.domicilio_activo==="SI")   srvs.push({id:"domicilio",lbl:"🛵 A domicilio"});
+  if(esSI(cfg.mesa_activo))         srvs.push({id:"mesa",     lbl:"🪑 Comer aquí"});
+  if(esSI(cfg.para_llevar_activo))  srvs.push({id:"llevar",   lbl:"🥡 Para llevar"});
+  if(esSI(cfg.domicilio_activo))    srvs.push({id:"domicilio",lbl:"🛵 A domicilio"});
   srvs.forEach(s=>{
     const b=document.createElement("button");
     b.className="ts-btn"; b.dataset.id=s.id; b.textContent=s.lbl;
@@ -478,18 +565,39 @@ function openModal(item){
   if(item.extras&&item.extras.length){
     eS.style.display="block";
     eG.innerHTML=item.extras.map((ex,i)=>`
-      <div class="ex-item" id="ex${i}" onclick="togEx(${i},'${esc(ex.nombre)}',${ex.precio})">
+      <div class="ex-item" id="ex${i}"
+           data-idx="${i}"
+           data-nombre="${ex.nombre.replace(/"/g,'').replace(/'/g,'')}"
+           data-precio="${ex.precio}">
         <div class="ex-chk" id="exc${i}">✓</div>
-        <span class="ex-name">${ex.nombre}</span>
+        <span class="ex-name">${ex.nombre.replace(/"/g,'').replace(/'/g,'')}</span>
         <span class="ex-price">${ex.precio>0?"+$"+ex.precio:"incluido"}</span>
       </div>`).join("");
+    // Event listener delegado — no depende de onclick inline
+    eG.onclick = function(e){
+      const el = e.target.closest(".ex-item");
+      if(!el) return;
+      const i      = parseInt(el.dataset.idx);
+      const nombre = el.dataset.nombre;
+      const precio = parseFloat(el.dataset.precio)||0;
+      togEx(i, nombre, precio, el);
+    };
   }else{ eS.style.display="none"; }
 
   const rS=document.getElementById("sec-rm"), rG=document.getElementById("m-remov");
   if(item.removibles&&item.removibles.length){
     rS.style.display="block";
-    rG.innerHTML=item.removibles.map((r,i)=>
-      `<div class="r-chip" id="rc${i}" onclick="togRem(${i},'${esc(r)}')">Sin ${r}</div>`).join("");
+    rG.innerHTML=item.removibles.map((r,i)=>`
+      <div class="r-chip" id="rc${i}"
+           data-idx="${i}"
+           data-nombre="${r.replace(/"/g,'').replace(/'/g,'')}">
+        Sin ${r.replace(/"/g,'').replace(/'/g,'')}
+      </div>`).join("");
+    rG.onclick = function(e){
+      const el = e.target.closest(".r-chip");
+      if(!el) return;
+      togRem(parseInt(el.dataset.idx), el.dataset.nombre, el);
+    };
   }else{ rS.style.display="none"; }
 
   recalcM();
@@ -498,20 +606,21 @@ function openModal(item){
 }
 
 function ovlM(e){ if(e.target.id==="movl") closeModal(); }
-function closeModal(){ document.getElementById("movl").classList.remove("open"); document.body.style.overflow=""; }
+function closeModal(){
+  document.getElementById("movl").classList.remove("open");
+  document.body.style.overflow="";
+}
 
-function togEx(i,nombre,precio){
-  const el=document.getElementById("ex"+i);
-  const idx=mExtras.findIndex(e=>e.nombre===nombre);
-  if(idx>=0){mExtras.splice(idx,1);el.classList.remove("sel");}
-  else{mExtras.push({nombre,precio});el.classList.add("sel");}
+function togEx(i, nombre, precio, el){
+  const idx = mExtras.findIndex(e=>e.nombre===nombre);
+  if(idx>=0){ mExtras.splice(idx,1); el.classList.remove("sel"); }
+  else{ mExtras.push({nombre, precio}); el.classList.add("sel"); }
   recalcM();
 }
-function togRem(i,nombre){
-  const el=document.getElementById("rc"+i);
-  const idx=mRemov.indexOf(nombre);
-  if(idx>=0){mRemov.splice(idx,1);el.classList.remove("rem");}
-  else{mRemov.push(nombre);el.classList.add("rem");}
+function togRem(i, nombre, el){
+  const idx = mRemov.indexOf(nombre);
+  if(idx>=0){ mRemov.splice(idx,1); el.classList.remove("rem"); }
+  else{ mRemov.push(nombre); el.classList.add("rem"); }
 }
 function mQty(d){ mQtyVal=Math.max(1,mQtyVal+d); st("m-qty",mQtyVal); recalcM(); }
 function recalcM(){
@@ -597,7 +706,25 @@ function closePanel(){ document.getElementById("order-panel").classList.remove("
 
 // ── WHATSAPP ──────────────────────────────────────────────────────
 function sendWA(){
+  // Validar nombre
+  const nombre = document.getElementById("cliente-nombre").value.trim();
+  if(!nombre){
+    document.getElementById("cliente-nombre").style.borderColor="var(--s)";
+    document.getElementById("cliente-nombre").focus();
+    alert("Por favor escribe tu nombre para continuar.");
+    return;
+  }
+  document.getElementById("cliente-nombre").style.borderColor="#e0e0e0";
+
+  // Validar tipo de servicio
+  if(!tipoServicio){
+    alert("Por favor selecciona cómo quieres tu pedido.");
+    return;
+  }
+
+  // Validar que haya al menos un producto
   if(!orden.length){ alert("Agrega al menos un producto."); return; }
+
   const sub=orden.reduce((s,o)=>s+(o.pu>0?o.pu*o.qty:0),0);
   const costoEnv=parseInt(cfg.domicilio_costo)||0;
   const minGratis=parseInt(cfg.domicilio_minimo_gratis)||0;
@@ -605,16 +732,18 @@ function sendWA(){
   const envio=esEnv?((minGratis>0&&sub>=minGratis)?0:costoEnv):0;
 
   let srv="";
-  if(tipoServicio==="mesa")      srv=mesaSel?`Mesa #${mesaSel}`:"Comer aquí";
+  if(tipoServicio==="mesa")      srv=mesaSel?`Mesa #${mesaSel}`:"Comer aquí 🪑";
   if(tipoServicio==="llevar")    srv="Para llevar 🥡";
   if(tipoServicio==="domicilio"){
     const dir=document.getElementById("dir-text").value.trim();
-    srv=`A domicilio 🛵${dir?" — "+dir:""}`;
+    srv=`A domicilio 🛵${dir?" — "+dir:" (sin dirección)"}`;
   }
 
   let msg=`🌸 *${cfg.header_titulo||"Flor de Azalea"}*\n`;
-  if(srv) msg+=`📍 ${srv}\n`;
-  msg+="\n";
+  if(cfg.header_subtitulo) msg+=`📍 *Sucursal:* ${cfg.header_subtitulo}\n`;
+  if(cfg.direccion) msg+=`🗺️ *Dirección:* ${cfg.direccion}\n`;
+  msg+=`👤 *Cliente:* ${nombre}\n`;
+  msg+=`🛍️ *Servicio:* ${srv}\n\n`;
   orden.forEach((o,i)=>{
     msg+=`${i+1}. ${o.nombre} x${o.qty}`;
     if(o.pu>0) msg+=` — $${o.pu*o.qty}`;
@@ -623,7 +752,7 @@ function sendWA(){
   });
   if(sub>0){
     msg+=`\n💰 Subtotal: $${sub}`;
-    if(esEnv) msg+=`\n🛵 Envío: ${envio===0?"Gratis":"$"+envio}`;
+    if(esEnv) msg+=`\n🛵 Envío: ${envio===0?"Gratis 🎉":"$"+envio}`;
     msg+=`\n✅ *Total: $${sub+envio}*`;
   }
   const nota=document.getElementById("onote").value.trim();
@@ -631,9 +760,60 @@ function sendWA(){
   window.open(`https://wa.me/${cfg.telefono||""}?text=${encodeURIComponent(msg)}`,"_blank");
 }
 
-function pedirCuenta(){
-  const nom=cfg.header_titulo||"el restaurante";
-  window.open(`https://wa.me/${cfg.telefono||""}?text=${encodeURIComponent("🧾 Hola, quisiera solicitar la cuenta / atención en "+nom+".")}` ,"_blank");
+// ── MODAL ATENCIÓN ────────────────────────────────────────────────
+let atenMotivo = "";
+
+function abrirModalAtencion(){
+  const nombrePedido = document.getElementById("cliente-nombre").value.trim();
+  if(nombrePedido) document.getElementById("aten-nombre").value = nombrePedido;
+  atenMotivo = "";
+  document.getElementById("aten-nota").value = "";
+
+  // Opciones desde GS — el Apps Script las devuelve como array en cfg.atencion_opciones
+  const contenedor = document.getElementById("aten-motivos");
+  const opciones = Array.isArray(cfg.atencion_opciones) && cfg.atencion_opciones.length
+    ? cfg.atencion_opciones
+    : ["📋 Necesito hacer un pedido","❓ Pregunta sobre el menú",
+       "🧾 Solicitar la cuenta","⚠️ Problema con mi pedido",
+       "💡 Dejar una sugerencia","💬 Otro motivo"];
+  contenedor.innerHTML = opciones.map(op=>
+    `<div class="aten-mot" data-val="${op}">${op}</div>`
+  ).join("");
+
+  contenedor.onclick = function(e){
+    const el = e.target.closest(".aten-mot");
+    if(!el) return;
+    document.querySelectorAll(".aten-mot").forEach(m=>m.classList.remove("sel"));
+    el.classList.add("sel");
+    atenMotivo = el.dataset.val;
+  };
+
+  document.getElementById("aten-ovl").style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+function cerrarModalAtencion(e, forzar){
+  if(forzar || (e && e.target.id==="aten-ovl")){
+    document.getElementById("aten-ovl").style.display = "none";
+    document.body.style.overflow = "";
+  }
+}
+
+function enviarAtencion(){
+  const nombre = document.getElementById("aten-nombre").value.trim();
+  if(!nombre){ alert("Por favor escribe tu nombre."); return; }
+  if(!atenMotivo){ alert("Selecciona el motivo de tu solicitud."); return; }
+  const nota = document.getElementById("aten-nota").value.trim();
+  let msg = `🔔 *Solicitud de Atención*\n`;
+  if(cfg.header_titulo)    msg += `🌸 *Sucursal:* ${cfg.header_titulo}\n`;
+  if(cfg.header_subtitulo) msg += `📍 *${cfg.header_subtitulo}*\n`;
+  if(cfg.direccion)        msg += `🗺️ *Dirección:* ${cfg.direccion}\n`;
+  msg += `\n👤 *Nombre:* ${nombre}\n`;
+  msg += `📌 *Motivo:* ${atenMotivo}\n`;
+  if(nota) msg += `💬 *Comentario:* ${nota}`;
+  const tel = cfg.telefono_atencion || cfg.telefono || "";
+  window.open(`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`,"_blank");
+  cerrarModalAtencion(null, true);
 }
 
 function irOpinion(){
@@ -645,26 +825,76 @@ function irOpinion(){
   }
 }
 
-function pedirUbicacion(){
-  if(!navigator.geolocation){ alert("Tu navegador no soporta geolocalización."); return; }
+function pedirUbicacionAuto(){
+  const inp = document.getElementById("dir-text");
+  if(!navigator.geolocation){
+    inp.placeholder = "Escribe tu dirección completa…";
+    inp.focus();
+    return;
+  }
+  inp.placeholder = "Obteniendo ubicación…";
+  inp.disabled = true;
   navigator.geolocation.getCurrentPosition(
-    pos=>{ document.getElementById("dir-text").value=`https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`; },
-    ()=>alert("No se pudo obtener ubicación. Escribe tu dirección manualmente.")
+    pos=>{
+      inp.value = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+      inp.placeholder = "Tu dirección completa…";
+      inp.disabled = false;
+    },
+    ()=>{
+      // Si falla simplemente deja el campo libre para que escriba
+      inp.placeholder = "Escribe tu dirección completa…";
+      inp.disabled = false;
+      inp.focus();
+    },
+    { enableHighAccuracy:true, timeout:8000 }
   );
 }
 
-// ── REDES EN PANEL ────────────────────────────────────────────────
-function renderRedes(){
-  if(cfg.redes_activo!=="SI") return;
-  const redes=[
-    {key:"facebook_url", icon:"📘"},
-    {key:"instagram_url",icon:"📸"},
-    {key:"tiktok_url",   icon:"🎵"},
-  ].filter(r=>cfg[r.key]&&!cfg[r.key].includes("PON_TU"));
+// ── REDES ─────────────────────────────────────────────────────────
+// Se llama una vez al cargar — pinta la sección fija debajo del menú
+function renderRedesFijas(){
+  if(!esSI(cfg.redes_activo)) return;
+  const redes = buildRedes();
   if(!redes.length) return;
-  document.getElementById("redes-icons").innerHTML=
-    redes.map(r=>`<a class="red-a" href="${cfg[r.key]}" target="_blank">${r.icon}</a>`).join("");
-  document.getElementById("redes-panel").style.display="block";
+
+  const html = redes.map(r=>`
+    <a href="${cfg[r.key]}" target="_blank" rel="noopener"
+       style="display:flex;flex-direction:column;align-items:center;gap:5px;text-decoration:none;transition:transform .18s;"
+       onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      ${r.svg}
+      <span style="font-size:.63rem;font-weight:800;color:${r.color};">${r.label}</span>
+    </a>`).join("");
+
+  document.getElementById("redes-fijas-icons").innerHTML = html;
+  document.getElementById("redes-fijas").style.display = "block";
+}
+
+function renderRedes(){
+  if(!esSI(cfg.redes_activo)) return;
+  const redes = buildRedes();
+  if(!redes.length) return;
+  document.getElementById("redes-icons").innerHTML =
+    redes.map(r=>`
+      <a class="red-a" href="${cfg[r.key]}" target="_blank" rel="noopener"
+         style="display:flex;flex-direction:column;align-items:center;gap:3px;text-decoration:none;">
+        ${r.svg.replace('width="32" height="32"','width="26" height="26"')}
+        <span style="font-size:.58rem;font-weight:700;color:${r.color};">${r.label}</span>
+      </a>`).join("");
+  document.getElementById("redes-panel").style.display = "block";
+}
+
+function buildRedes(){
+  const SVG = {
+    facebook: `<svg width="32" height="32" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>`,
+    instagram:`<svg width="32" height="32" viewBox="0 0 24 24"><defs><radialGradient id="ig" cx="30%" cy="107%" r="150%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285AEB"/></radialGradient></defs><path fill="url(#ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,
+    tiktok:   `<svg width="32" height="32" viewBox="0 0 24 24" fill="#000"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>`,
+  };
+
+  return [
+    {key:"facebook_url",  svg: SVG.facebook,  label:"Facebook",  color:"#1877F2"},
+    {key:"instagram_url", svg: SVG.instagram, label:"Instagram", color:"#E1306C"},
+    {key:"tiktok_url",    svg: SVG.tiktok,    label:"TikTok",    color:"#000"},
+  ].filter(r => cfg[r.key] && !cfg[r.key].includes("PON_TU"));
 }
 
 // ── UTILS ─────────────────────────────────────────────────────────
